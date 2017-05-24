@@ -9,36 +9,54 @@ import pandas
 
 class dataManager : 
     def __init__ (self) :
-        self.con = sqlite3.connect(":memory:")
+        #self.con = sqlite3.connect(":memory:")
+        self.con = sqlite3.connect('source_datafiles/source_database')
         self.cursor = self.con.cursor()
 
+        if self.checkDBisEmpty() :
+            print("Database seems empty/not existing, doing the import")
+            self.readInXLSX()
+        else : 
+            print("Database is not empty, seems to be all there")
+            
+            
 
+    def checkDBisEmpty(self) :
+        tables = self.runCheck()
+        return (tables.empty)
+        
 
-    def readInCSV(self) :
+    def readInXLSX(self) :
+
         df_Users = pandas.read_excel("./source_datafiles/Users.xlsx")
-        df_Users.to_sql("Users", self.con, if_exists='replace', index=True)
+        df_Users.to_sql("Users", self.con, if_exists='fail', index=True)
         
         df_Tasks = pandas.read_excel("./source_datafiles/Tasks.xlsx")
-        df_Tasks.to_sql("Tasks", self.con, if_exists='replace', index=True)
+        df_Tasks.to_sql("Tasks", self.con, if_exists='fail', index=True)
     
         df_WorkerAgents = pandas.read_excel("./source_datafiles/Worker_Agents.xlsx")
-        df_WorkerAgents.to_sql("WorkerAgents", self.con, if_exists='replace',
+        df_WorkerAgents.to_sql("WorkerAgents", self.con, if_exists='fail',
                                index=True)
     
         df_GameSessions = pandas.read_excel("./source_datafiles/Game_Sessions.xlsx")
-        df_GameSessions.to_sql("GameSessions", self.con, if_exists='replace',
+        df_GameSessions.to_sql("GameSessions", self.con, if_exists='fail',
                                index=True)
     
+        df_GameLevels = pandas.read_excel("./source_datafiles/Game_Levels.xlsx")
+        df_GameLevels.to_sql("GameLevels", self.con, if_exists='fail',
+                               index=True)
+
+        df_Decisions = pandas.read_excel("./source_datafiles/Decisions.xlsx")
+        df_Decisions.to_sql("Decisions", self.con, if_exists='fail',
+                               index=True)
         self.con.commit()
 
 
     def runCheck(self) :
-        print("trying to retrieve tables...")
-        self.cursor.execute("SELECT name FROM sqlite_master "
+        # print("trying to retrieve tables...")
+        tables = self.getValuesAsPandasObject("SELECT name FROM sqlite_master "
                                 + "WHERE type='table';")
-        # TODO : Add a check whether the tables are read in 
-        #                        correctly instead of printing them
-        print(self.cursor.fetchall())
+        return tables
     
     def getValuesAsPandasObject(self, query) :
         return pandas.read_sql_query(query, self.con)

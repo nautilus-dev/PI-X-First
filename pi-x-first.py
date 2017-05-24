@@ -9,7 +9,8 @@ from data_import import dataManager
 def main() :
     # main goes here
     dM = dataManager()
-    dM.readInCSV()
+
+        
     # checking if there is a return:
     dM.printValues("SELECT * FROM Users LIMIT 20")
     

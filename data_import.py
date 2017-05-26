@@ -48,7 +48,7 @@ class dataManager :
 
         df_Decisions = pandas.read_excel("./source_datafiles/Decisions.xlsx")
         df_Decisions.to_sql("Decisions", self.con, if_exists='fail',
-                               index=True)
+                               index=False)
         self.con.commit()
 
 

@@ -11,17 +11,22 @@ from data_import import dataManager
 class Trial :
     def __init__(self, session_id) :
         self.dM = dataManager()
-        self.tasks = self.dM.getValuesAsPandasObject("SELECT * FROM 'Tasks'")
-
+        self.tasks = self.dM.getValuesAsPandasObject("SELECT * FROM Tasks")
+        
         self.sid = session_id  # session ID as in the raw data
         self.day = 0  # day number = round
         self.new_day()
 
     def get_workers(self) :
         """ load worker ratings for current day from database """
-        query = ("SELECT 'Worker Agent Reputation' FROM 'Decisions' \
-                 WHERE 'Session ID'='%s' AND 'Round'='%d'" % (self.sid, self.day))
+        #query = ("SELECT 'Worker Agent Reputation' FROM 'Decisions' \
+        #         WHERE 'Session ID'='%s' AND 'Round'='%d'" % (self.sid, self.day))
+        query = ("SELECT \"Worker Agent Reputation\" FROM Decisions \
+                WHERE \"Session ID\"=\"%s\" AND \"Round\"=\"%d\" ;" 
+                %  (self.sid, self.day))
         self.workers = self.dM.getValuesAsPandasObject(query)
+        # TODO : remove this prin here
+        print(self.workers)
 
     def new_day(self) :
         self.day += 1

@@ -26,6 +26,7 @@ class piDecider :
         """
         The switch: Use method according to current state
         """
+        self.assignments = [[]] * game_model.numAgents
         if game_model.round < self.pi :
             self.search(game_model)
         else :
@@ -44,38 +45,56 @@ class piDecider :
         # assuming even distribution of tasks (not effort units)
         n = game_model.numAgents  # count workers (should be 10)
         m = game_model.numTasks
-        self.assignments = [[random.randint(1,30) \
-                for i in range(int(math.ceil(m/n)))] for i in range(n)]
+        avg_tasks = int(math.ceil(m/n))
+        tasks = game_model.getTasks()
+        for wa in range(n):
+            self.assignments[wa] = []
+            for i in range(avg_tasks):
+                self.assignments[wa].append(tasks.get())
         print("assignments = " + str(self.assignments))
 
     def stand(self, game_model) :
         """
         try to model people's decisions in the stand phase, e.g.
-          - distribute tasks among N top-rated workers or
+          - distribute tasks among N top-rated workers
           - fill top-rated ẀAs workload, then go to 2nd rated etc.
         """
         # TODO: remove prints in this function
-        # TODO: une effort units instead of tasks
         # TODO: (optional) fix double data numTasks
         print("Using stand phase")
-        n = game_model.numAgents  #  count WAs
-        m = game_model.numTasks  # count tasks to be done
+        # TODO: This:
+        tasks = game_model.getTasks()
+        while tasks.qsize() > 0:
+            # iterate through tasks and assign them
+            current_task = tasks.get()
+            self.assignTask(current_task, game_model)
+        # n = game_model.numAgents  #  count WAs
+        # m = game_model.numTasks  # count tasks to be done
         # calculate avg tasks per WA
-        avg_tasks = [math.ceil(m/n)] * n
-        # fetch tasks for current round
-        tasks = Queue.Queue(m)
-        # TODO: This
-        for i in range(m):
-            tasks.put(random.randint(1,30))
-        total_rep = sum(game_model.reputation)
+        # avg_tasks = [math.ceil(m/n)] * n
+        # total_rep = sum(game_model.reputation)
+        # fetch tasks from game model
+        # tasks = game_model.getTasks()
         # iterate through workers and assign open tasks
-        i = 0
-        self.assignments = [[]] * n
-        for i in range(n):
-            self.assignments[i] = []
-            rep = game_model.reputation[i]
-            assigns = int(rep/total_rep * m)
-            for j in range(assigns):
-                task = tasks.get()
-                self.assignments[i].append(task)
-        print("assignments = " + str(self.assignments))
+        # for i in range(n):
+        #    self.assignments[i] = []
+        #    rep = game_model.reputation[i]
+        #    assigns = int(rep/total_rep * m)
+        #    for j in range(assigns):
+        #        task = tasks.get()
+        #        self.assignments[i].append(task)
+        # print("assignments = " + str(self.assignments))
+
+    def assignTask(self, task, game_model):
+        """ more sophisticated task assigner for stand phase """
+        # 1. get best rated agent
+        while task_assigned is not True:
+            i = game_model.reputation.index(max(game_model.reputation))
+            # 2. check if WA queue has room for current task
+            task_effort = game_model.getEffortPerTask(task)
+            task_assigned = True
+        #   2.1 if true: assign task to worker
+        #   2.2 else: proceed to 1 with next agent
+        
+        
+        pass

@@ -14,11 +14,14 @@ from data_import import dataManager
 class Trial :
     def __init__(self, session_id) :
         self.dM = dataManager()
+        self.nrounds = 5
+        self.gm = gameModel(len(self.workers), self.nrounds)
         self.tasks = self.dM.getValuesAsPandasObject("SELECT * FROM Tasks")
+        self.workers = gm.getWorkerReputation()  # update worker reputation data
 
         self.sid = session_id  # session ID as in the raw data
-        self.day = 0  # day number = round
-        self.new_day()
+        self.day = 1  # day number = round
+
 
     def get_worker_reputation(self) :
         """ load worker ratings for current day from database """
@@ -28,12 +31,13 @@ class Trial :
                 WHERE \"Session ID\"=\"%s\" AND \"Round\"=\"%d\" ;"
                 %  (self.sid, self.day))
         self.workers = self.dM.getValuesAsPandasObject(query)
-        # TODO : remove this print here
-        print(self.workers)
+        # TODO : remove this prin here
+        # print(self.workers)
 
     def new_day(self) :
         self.day += 1
-        self.get_worker_reputation()  # update worker reputation data
+        self.workers = gm.getWorkerReputation()  # update worker reputation data
+        gm.executeGame(assignments)
 
 
 class piDecider :
@@ -47,7 +51,7 @@ class piDecider :
         self.assignments = []
 
     def decide(self, trial) :
-        """l
+        """
         The switch: Use method according to current state
         """
         if trial.day < self.pi :
@@ -75,8 +79,9 @@ class piDecider :
           - fill top-rated ẀAs workload, then go to 2nd rated etc.
         # Example for generating dataset with algorithm using session id
         >>> sid = "e7e52776-2750-4cde-a5da-093ccb8feaf9"
-        >>> pd = piDecider(pi)
+        >>> pd = piDecider(0)
         >>> trial = Trial(sid)
+        >>> pd.decide(trial)
 
         """
         # something like

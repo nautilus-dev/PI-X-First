@@ -125,7 +125,6 @@ class gameModel :
                 effort = self.getEffortPerTask(elem)
                 if effort <= waLeftCapacity :
                     self.numSuccessfulEffort[i] += effort
-                    elem = backlog.get()
                 else :
                     break
             print ("working done")

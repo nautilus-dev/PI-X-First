@@ -52,15 +52,16 @@ class gameModel :
         self.taskEffortUnits = [1 for i in xrange(self.numTasks)]
         # sample workers by their
 
-        print ("not yet implemented")
+        pass
 
 
     def caclulcateReputation (self, successfulNessByWA, loadbyWA) :
+        # TODO:         
         # for each WA: use the load (normalized by the amount of total tasks)
         # and the whether it was successful with all tasks,
         # 1.0 reputation would be all tasks of a round got
         # and been able to work on all.
-        print ("not implemented yet!")
+        pass
 
     def executeGame(self, assignments) :
         """
@@ -69,4 +70,4 @@ class gameModel :
         # TODO: All tasks are the same length: render from DB, take 1 as start
         # TODO: calulculate whether the tasts are successfully finished
         self.round += 1
-        print ("not implemented yet!")
+        

@@ -65,8 +65,14 @@ class gameModel :
             self.agentsBacklog[i] = q
 
     def getAgentsProductivity (self) :
-        # TODO : rework that it samples from the database:
-        self.agentsProductivity = [(10 + i) for i in xrange(self.numAgents)]
+        # Deprecated ascending linear productivity
+        # self.agentsProductivity = [(10 + i) for i in xrange(self.numAgents)]
+        
+        query = "SELECT \"Max Productivity (No. of Effort Units per Round)\"" + "FROM WorkerAgents WHERE ID <= 10 ORDER BY ID ASC;"
+        productivity = self.dM.getValuesAsPandasObject(query)
+        for wa in range(0, self.numAgents) :
+            self.agentsProductivity[wa] = productivity.values[wa][0]
+                
 
 
     def caclulcateReputation (self) :
@@ -115,6 +121,7 @@ class gameModel :
 
         for i in range(0, self.numAgents) :
             #print ("current Round is: " , self.round)
+            print("Backlog length is: " , self.agentsBacklog[i].qsize())            
             backlog = self.agentsBacklog[i]
             newTasks = assignments[i]
             waLeftCapacity = self.agentsProductivity[i]
@@ -144,6 +151,7 @@ class gameModel :
                 leftTasks.put(elem)
             # add back the tasks
             self.agentsBacklog[i] = leftTasks
+            print("Queue length is: " , self.agentsBacklog[i].qsize())
         self.caclulcateReputation()
 
 

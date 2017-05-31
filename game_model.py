@@ -12,12 +12,21 @@ class gameModel :
 
     agents = np.array 
     reputation = np.array
+    currentAsssignment = np.array
     round = -1
+
+
+    # TODO :
+    # Reputation calculation
+    # calculate probability whether task is succ. based on assignment
+    # calculate 
+
 
     def getWorkerReputation (self, assignments) :
         """
         Starts the whole game logic and gives back the reputation.
         """
+        self.currentAssignment = assignments
         # TODO: start whole logic!
         return self.reputation
 
@@ -29,6 +38,7 @@ class gameModel :
         self.agents = np.zeros((numRounds, numAgents), dtype = np.float)
         self.repuation = np.zeros((numAgents), dtype = np.float)
         self.reputation = [0.5 for i in xrange(numAgents)]
+        self.currentAssignment = np.zeros((numAgents), dtype = np.int)
         self.round = 0
     
     def caclulcateReputation (self, successfulNessByWA, loadbyWA) :
@@ -37,6 +47,8 @@ class gameModel :
         # 1.0 reputation would be all tasks of a round got
         # and been able to work on all.
         print ("not implemented yet!")
+       
+    def calculate
        
     def calculateScore (self) :
              

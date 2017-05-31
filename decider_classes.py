@@ -25,7 +25,7 @@ class Trial :
                 WHERE \"Session ID\"=\"%s\" AND \"Round\"=\"%d\" ;" 
                 %  (self.sid, self.day))
         self.workers = self.dM.getValuesAsPandasObject(query)
-        # TODO : remove this prin here
+        # TODO : remove this print here
         print(self.workers)
 
     def new_day(self) :
@@ -44,7 +44,7 @@ class piDecider :
         self.assignments = []
 
     def decide(self, trial) :
-        """
+        """l
         The switch: Use method according to current state
         """
         if trial.day < self.pi :

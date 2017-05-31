@@ -49,8 +49,9 @@ class piDecider :
         tasks = game_model.getTasks()
         for wa in range(n):
             self.assignments[wa] = []
-            for i in range(avg_tasks):
-                self.assignments[wa].append(tasks.get())
+            #for i in range(avg_tasks):
+            for i in range(len(tasks)-1):
+                self.assignments[wa].append(tasks.pop(1))
         print("assignments = " + str(self.assignments))
 
     def stand(self, game_model) :
@@ -64,9 +65,9 @@ class piDecider :
         print("Using stand phase")
         # TODO: This:
         tasks = game_model.getTasks()
-        while tasks.qsize() > 0:
+        while len(tasks) > 1:
             # iterate through tasks and assign them
-            current_task = tasks.get()
+            current_task = tasks.pop(1)
             self.assignTask(current_task, game_model)
         # n = game_model.numAgents  #  count WAs
         # m = game_model.numTasks  # count tasks to be done

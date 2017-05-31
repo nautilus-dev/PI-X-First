@@ -26,11 +26,6 @@ class gameModel :
 
 
 
-    # TODO :
-    # Reputation calculation
-    # calculate probability whether task is succ. based on assignment
-
-
 
     def getWorkerReputation (self) :
         """
@@ -92,11 +87,12 @@ class gameModel :
             # print ("reputation for this guy is ", newRep)
 
     def getTasks(self) :
-        """ returns open tasks for current round as queue """
-        # TODO: rewort that  sample from database
-        tasks = Queue.Queue()
-        for i in range(self.numTasks):
-            tasks.put(random.randint(1,30))
+        """ returns 20 tasks for current round as list """
+        tasks = []
+        query = "SELECT \"ID\" FROM Tasks ORDER BY RANDOM() LIMIT %d" % self.numTasks
+        taskDF = self.dM.getValuesAsPandasObject(query)
+        for task in range(0, self.numTasks) :
+            tasks.append(taskDF.values[task][0])
         return tasks
 
     def getEffortPerTask(self, task) :
@@ -119,16 +115,6 @@ class gameModel :
         """
         Does all the game playing based oon the assignments
         """
-        # TODO: calulculate whether the tasts are successfully finished
-
-        # we have all the assignments ans the effort units, just do scalar substraction?
-
-        # assignments is an list of lists of the tasks for each worker.
-
-        # TODO: ONLY FOR TESTING!!!!
-        # for i in range(0, self.numAgents) :
-        #    q = Queue.Queue()
-        #    assignments[i] = q
 
         # for each worker
             # load its backlog queue

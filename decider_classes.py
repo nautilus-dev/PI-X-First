@@ -46,7 +46,6 @@ class piDecider :
         m = game_model.numTasks
         self.assignments = [math.ceil(m/n)] * n
         print("assignments = " + str(self.assignments))
-        return self.assignments
 
     def stand(self, game_model) :
         """
@@ -59,20 +58,19 @@ class piDecider :
         >>> a = []
         >>> game_model.executeGame(a)
         >>> pd.decide(game_model)
-
+        >>> game_model.reputation = [i/10. for i in range(1, 11)]
+        >>> pd.decide(game_model)
         """
         # TODO : remove prints in this function
         print("Using stand phase")
         print("round = " + str(game_model.round) + "\t" +
-              "pi = " + str(self.pi))
-        print(game_model.reputation)
+              "pi = " + str(self.pi) + "\t" +
+              "rep = " + str(game_model.reputation))
         n = game_model.numAgents  #  count WAs
         m = game_model.numTasks  # count tasks to be done
         # calculate avg tasks per WA
         avg_tasks = [math.ceil(m/n)] * n
         open_tasks = m
-        game_model.reputation = [i/10. for i in range(1, 11)]
-        print(game_model.reputation)
         total_rep = sum(game_model.reputation)
         # iterate through workers and assign open tasks
         i = 0
@@ -81,4 +79,3 @@ class piDecider :
             self.assignments[i] = ["job_id"] * assign
             i += 1
         print("assignments = " + str(self.assignments))
-        return self.assignments

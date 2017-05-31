@@ -6,13 +6,14 @@ Created on Tue May 30 12:34:36 2017
 
 import numpy as np
 import Queue
+import math
 from data_import import dataManager
 
 
 class gameModel :
 
     # Parameters for fitting Reputation
-    a = 1
+    a = 0.017
     y = 1
 
     dM = dataManager()
@@ -79,7 +80,7 @@ class gameModel :
         # TODO:
         # for each worker calculate
         # a * ((#successfulTasks - # failedTasks) * y +
-        #   (the last reputation * (i-1)) / i )
+        #   (the last reputation * i) / i )
         for wa in range(0, self.numAgents) :
             previousReputation = self.reputation[wa]
             successfulTasks = self.numSuccessfulEffort[wa]
@@ -87,9 +88,10 @@ class gameModel :
             numRounds = self.round
 
             newRep = self.a * ((successfulTasks - failedTasks) * self.y +
-                (previousReputation * (numRounds - 1)) / numRounds)
+                (previousReputation * numRounds) / numRounds)
 
-            self.reputation[wa] = newRep
+            self.reputation[wa] = abs(newRep)
+            print ("reputation for this guy is ", newRep)
 
     def getEffortPerTask(self, task) :
         query = "SELECT \"Effort Required\" FROM Tasks WHERE \"ID\"=%d" % task
@@ -120,39 +122,44 @@ class gameModel :
         self.round += 1
 
         for i in range(0, self.numAgents) :
-            #print ("current Round is: " , self.round)
-            print("Backlog length is: " , self.agentsBacklog[i].qsize())            
+            # print ("current Round is: " , self.round)
+            # print("Previous Backlog length is: " , self.agentsBacklog[i].qsize())            
             backlog = self.agentsBacklog[i]
             newTasks = assignments[i]
             waLeftCapacity = self.agentsProductivity[i]
+            # print("Worker Capacity is: " , waLeftCapacity)            
             for b in range(0, len(newTasks)) :
                 backlog.put(newTasks[b])
             #print ("working assignments parsed")
             #print ("backlog size is: " , backlog.qsize())
             #print ("agent productivity is: " , waLeftCapacity)
             elem = -1
+            # Never fall back into the working mode, when failing once
+            Work = True
+            leftTasks = Queue.Queue()
+            # print("backlog Size", backlog.qsize())
             while backlog.qsize() > 0 :
                 elem = backlog.get()
                 #print ("Current Element " , elem)
                 effort = self.getEffortPerTask(elem)
-                if effort <= waLeftCapacity :
+                # print ("Current Element Effort", effort)
+                # print ("Left Capacity", waLeftCapacity)
+                if effort <= waLeftCapacity and Work:                    
                     self.numSuccessfulEffort[i] += effort
+                    waLeftCapacity -= effort
                 else :
-                    break
-            #print ("working done")
-            # now the failed elements and add them back to some queue
-            # TODO: Rework here. looks super ugly
-            leftTasks = Queue.Queue()
-            leftTasks.put(elem)
-            self.numFailedEffort += self.getEffortPerTask(elem)
-            while (backlog.qsize() > 0) :
-                elem = backlog.get()
-                self.numFailedEffort += self.getEffortPerTask(elem)
-                leftTasks.put(elem)
+                    Work = False
+                    self.numFailedEffort += self.getEffortPerTask(elem)
+                    leftTasks.put(elem)
+ 
             # add back the tasks
             self.agentsBacklog[i] = leftTasks
-            print("Queue length is: " , self.agentsBacklog[i].qsize())
+            # print("New BacklogQueue length is: " , self.agentsBacklog[i].qsize())
+            # print("Successfull Effort" , self.numSuccessfulEffort[i])
+            # print("Queued Effort", self.numFailedEffort[i])
+        
         self.caclulcateReputation()
+       
 
 
 

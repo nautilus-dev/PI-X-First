@@ -5,6 +5,9 @@ Moritz Hoffmann <moritz.hoffmann@jupiter.uni-freiburg.de>
 """
 
 import math
+import numpy
+
+from game_model import gameModel
 from data_import import dataManager
 
 
@@ -12,17 +15,17 @@ class Trial :
     def __init__(self, session_id) :
         self.dM = dataManager()
         self.tasks = self.dM.getValuesAsPandasObject("SELECT * FROM Tasks")
-        
+
         self.sid = session_id  # session ID as in the raw data
         self.day = 0  # day number = round
         self.new_day()
 
-    def get_workers(self) :
+    def get_worker_reputation(self) :
         """ load worker ratings for current day from database """
         #query = ("SELECT 'Worker Agent Reputation' FROM 'Decisions' \
         #         WHERE 'Session ID'='%s' AND 'Round'='%d'" % (self.sid, self.day))
         query = ("SELECT \"Worker Agent Reputation\" FROM Decisions \
-                WHERE \"Session ID\"=\"%s\" AND \"Round\"=\"%d\" ;" 
+                WHERE \"Session ID\"=\"%s\" AND \"Round\"=\"%d\" ;"
                 %  (self.sid, self.day))
         self.workers = self.dM.getValuesAsPandasObject(query)
         # TODO : remove this print here
@@ -30,7 +33,7 @@ class Trial :
 
     def new_day(self) :
         self.day += 1
-        self.get_workers()  # update worker reputation data
+        self.get_worker_reputation()  # update worker reputation data
 
 
 class piDecider :
@@ -70,8 +73,25 @@ class piDecider :
         try to model people's decisions in the stand phase, e.g.
           - distribute tasks among N top-rated workers or
           - fill top-rated ẀAs workload, then go to 2nd rated etc.
+        # Example for generating dataset with algorithm using session id
+        >>> sid = "e7e52776-2750-4cde-a5da-093ccb8feaf9"
+        >>> pd = piDecider(pi)
+        >>> trial = Trial(sid)
+
         """
         # something like
         # p = fitted_distribution()
         # self.assignments = p
-        pass
+
+        n = len(trial.workers)  #  count WAs
+        m = len(trial.tasks)  # count tasks to be done
+        # calculate avg tasks per WA
+        avg_tasks = [math.ceil(m/n)] * n
+        i = 0
+        for wa in trial.workers * m:
+            if open_tasks > 0:
+                self.assignments[i] = wa
+            i += 1
+            print("i = " + str(i))
+            print("rep = " + str(wa))
+        print("assignments = " + str(self.assignments))

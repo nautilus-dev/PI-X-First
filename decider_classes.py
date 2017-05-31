@@ -49,8 +49,8 @@ class piDecider :
         tasks = game_model.getTasks()
         for wa in range(n):
             self.assignments[wa] = []
-            #for i in range(avg_tasks):
-            for i in range(len(tasks)):
+            for i in range(avg_tasks):
+            #for i in range(tasks)):
                 self.assignments[wa].append(tasks.pop())
         print("assignments = " + str(self.assignments))
 

@@ -7,7 +7,6 @@ Created on Tue May 30 12:34:36 2017
 import numpy as np
 import Queue
 import random
-import math
 from data_import import dataManager
 
 

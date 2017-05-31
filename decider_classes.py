@@ -87,11 +87,25 @@ class piDecider :
 
     def assignTask(self, task, game_model):
         """ more sophisticated task assigner for stand phase """
-        # 1. get best rated agent
+        task_assigned = False
         while task_assigned is not True:
+            # 1. get best rated agent
             i = game_model.reputation.index(max(game_model.reputation))
             # 2. check if WA queue has room for current task
+            # 2.1 get effort required for task
             task_effort = game_model.getEffortPerTask(task)
+            # 2.2 get WA productivity
+            agent_productivity = game_model.agentsProductivity[i]
+            # 2.3 get WA queue
+            agent_queue = [2, 11]
+            # agent_queue = game_model.agentsBacklog
+            # get free workpower
+            for queued_task in agent_queue:
+                agent_workload += game_model.getEffortPerTask(queued_task)
+            # debug
+            print("effort = " + str(task_effort))
+            print("produc = " + str(agent_productivity))
+            print("bqueue = " + str(agent_queue))
             task_assigned = True
         #   2.1 if true: assign task to worker
         #   2.2 else: proceed to 1 with next agent

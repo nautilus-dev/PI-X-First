@@ -107,11 +107,16 @@ class gameModel :
         return value.values[0][0]
 
     def getTaskDifficulty(self, task) :
-        return 1
-    
+        query = "SELECT \"Difficulty\" FROM Tasks WHERE \"ID\"=%d" % task
+        value = self.dM.getValuesAsPandasObject(query)
+        return value.values[0][0]
+
     def getAgentCapability(self, agent) :
-        return 1
-    
+        query = "SELECT \"High Quality Output Probability\" \
+                 FROM WorkerAgents WHERE \"ID\"=%d" % agent
+        value = self.dM.getValuesAsPandasObject(query)
+        return value.values[0][0]
+ 
     def executeGame(self, assignments) :
         """
         Does all the game playing based oon the assignments
@@ -158,7 +163,7 @@ class gameModel :
                 effort = self.getEffortPerTask(elem)
                 # print ("Current Element Effort", effort)
                 # print ("Left Capacity", waLeftCapacity)
-                Workable = True if self.getAgentCapability(i) >= self.getTaskDifficulty(elem) else False
+                Workable = True if self.getAgentCapability(i + 1) >= self.getTaskDifficulty(elem) else False
                 if effort <= waLeftCapacity and Workable and Work:                    
                     self.numSuccessfulEffort[i] += effort
                     waLeftCapacity -= effort

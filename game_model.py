@@ -42,7 +42,8 @@ class gameModel :
         self.dM = dataManager()
     
     def importData (self) :
-
+        
+        print ("not yet implemented")
         
     
     def caclulcateReputation (self, successfulNessByWA, loadbyWA) :
@@ -53,8 +54,8 @@ class gameModel :
         print ("not implemented yet!")
        
     def executeGame(self, assignments) :
-    """
-    Does all the game playing based oon the assignments
-    """        
+        """
+        Does all the game playing based oon the assignments
+        """        
         print ("not implemented yet!")
        

@@ -23,7 +23,6 @@ class gameModel :
     currentAsssignment = np.array
     round = 0
     numTasks = 20
-    taskEffortUnits = np.array
     numSuccessfulEffort = np.array
     numFailedEffort = np.array
 
@@ -58,18 +57,12 @@ class gameModel :
         self.taskEffortUnits = np.zeros((numTasks), dtype = np.int)
         self.round = 0
         self.numTasks = numTasks
-        self.getTaskEffortUnits()
         self.getAgentsProductivity()
         self.agentsBacklog = [0 for i in xrange(self.numAgents)]
         # constructing the backlog queue
         for i in range(0, self.numAgents) :
             q = Queue.Queue()
             self.agentsBacklog[i] = q
-
-    def getTaskEffortUnits (self) :
-        # TODO : rework that it samples from the database:
-        # self.dM.getValuesAsPandasObject("SELECT * FROM Tasks")
-        self.taskEffortUnits = [1 for i in xrange(self.numTasks)]
 
     def getAgentsProductivity (self) :
         # TODO : rework that it samples from the database:
@@ -79,14 +72,14 @@ class gameModel :
     def caclulcateReputation (self) :
         # TODO:
         # for each worker calculate
-        # a * ((#successfulTasks - # failedTasks) * y + 
+        # a * ((#successfulTasks - # failedTasks) * y +
         #   (the last reputation * (i-1)) / i )
         for wa in range(0, self.numAgents) :
             previousReputation = self.reputation[wa]
             successfulTasks = self.numSuccessfulEffort[wa]
             failedTasks = self.numFailedEffort[wa]
             numRounds = self.round
-            
+
             newRep = self.a * ((successfulTasks - failedTasks) * self.y +
                 (previousReputation * (numRounds - 1)) / numRounds)
 

@@ -60,19 +60,19 @@ class gameModel :
     def getAgentsProductivity (self) :
         # Deprecated ascending linear productivity
         # self.agentsProductivity = [(10 + i) for i in xrange(self.numAgents)]
-        
+
         query = "SELECT \"Max Productivity (No. of Effort Units per Round)\"" + "FROM WorkerAgents WHERE ID <= 10 ORDER BY ID ASC;"
         productivity = self.dM.getValuesAsPandasObject(query)
         for wa in range(0, self.numAgents) :
             self.agentsProductivity[wa] = productivity.values[wa][0]
-        # print("productivity of WA" , self.agentsProductivity)        
+        # print("productivity of WA" , self.agentsProductivity)
 
 
     def caclulcateReputation (self) :
         # for each worker calculate
-        # ( (((((#succ - #failed)/(#succ + #failed))+1)/2)*(10-round)) + 
+        # ( (((((#succ - #failed)/(#succ + #failed))+1)/2)*(10-round)) +
         # (prevRep * round )) / 10
-    
+
         for wa in range(0, self.numAgents) :
             previousReputation = self.reputation[wa]
             successfulTasks = self.numSuccessfulEffort[wa]
@@ -103,14 +103,16 @@ class gameModel :
     def getTaskDifficulty(self, task) :
         query = "SELECT \"Difficulty\" FROM Tasks WHERE \"ID\"=%d" % task
         value = self.dM.getValuesAsPandasObject(query)
+        # print(value.values)
         return value.values[0][0]
 
     def getAgentCapability(self, agent) :
         query = "SELECT \"High Quality Output Probability\" \
                  FROM WorkerAgents WHERE \"ID\"=%d" % agent
         value = self.dM.getValuesAsPandasObject(query)
+        # print("Worker",agent, "capbility", value.values)
         return value.values[0][0]
- 
+
     def executeGame(self, assignments) :
         """
         Does all the game playing based oon the assignments
@@ -126,11 +128,11 @@ class gameModel :
 
         for i in range(0, self.numAgents) :
             # print ("current Round is: " , self.round)
-            # print("Previous Backlog length is: " , self.agentsBacklog[i].qsize())            
+            # print("Previous Backlog length is: " , self.agentsBacklog[i].qsize())
             backlog = self.agentsBacklog[i]
             newTasks = assignments[i]
             waLeftCapacity = self.agentsProductivity[i]
-            # print("Worker Capacity is: " , waLeftCapacity)            
+            # print("Worker Capacity is: " , waLeftCapacity)
             for b in range(0, len(newTasks)) :
                 backlog.append(newTasks[b])
             #print ("working assignments parsed")
@@ -138,7 +140,6 @@ class gameModel :
             #print ("agent productivity is: " , waLeftCapacity)
             elem = -1
             # Never fall back into the working mode, when failing once
-            Work = True
             leftTasks = []
             # print("backlog Size", backlog.qsize())
             while len(backlog) > 0 :
@@ -149,20 +150,20 @@ class gameModel :
                 # print ("Current Element Effort", effort)
                 # print ("Left Capacity", waLeftCapacity)
                 Workable = True if self.getAgentCapability(i + 1) >= self.getTaskDifficulty(elem) else False
-                if effort <= waLeftCapacity and Workable and Work:                    
+                # print (Workable)
+                if effort <= waLeftCapacity and Workable :
                     self.numSuccessfulEffort[i] += effort
                     waLeftCapacity -= effort
                 else :
-                    Work = False
                     self.numFailedEffort += self.getEffortPerTask(elem)
                     leftTasks.append(elem)
- 
+
             # add back the tasks
             self.agentsBacklog[i] = leftTasks
             # print("New BacklogQueue length is: " , self.agentsBacklog[i].qsize())
             # print("Successfull Effort" , self.numSuccessfulEffort[i])
             # print("Queued Effort", self.numFailedEffort[i])
-        
+
         self.caclulcateReputation()
-       
+
 

@@ -25,7 +25,7 @@ def main() :
     # set how many agents
     nagents = 10
     # set how many rounds
-    nrounds = 5
+    nrounds = 2
 
     # init everything
     pd = piDecider(pi)

@@ -36,7 +36,6 @@ class piDecider :
         try to model peoples decisions in the search phase,
         e.g. distribute tasks equally or randomly
         """
-        # TODO: Make self.assignments a list of lists
         # TODO remove print statements in this function
         # TODO (optional) make distribution respect effort units instead of tasks
         print("Using search phase")
@@ -45,7 +44,8 @@ class piDecider :
         # assuming even distribution of tasks (not effort units)
         n = game_model.numAgents  # count workers (should be 10)
         m = game_model.numTasks
-        self.assignments = [["job_id"] * int(math.ceil(m/n))] * n
+        self.assignments = [[random.randint(1,30) \
+                for i in range(int(math.ceil(m/n)))] for i in range(n)]
         print("assignments = " + str(self.assignments))
 
     def stand(self, game_model) :
@@ -53,28 +53,18 @@ class piDecider :
         try to model people's decisions in the stand phase, e.g.
           - distribute tasks among N top-rated workers or
           - fill top-rated ẀAs workload, then go to 2nd rated etc.
-        >>> pd = piDecider(0)
-        >>> game_model = gameModel(10, 5)
-        gameModel initialized
-        >>> a = []
-        >>> game_model.executeGame(a)
-        >>> pd.decide(game_model)
-        >>> game_model.reputation = [i/10. for i in range(1, 11)]
-        >>> pd.decide(game_model)
         """
-        # TODO: Task generation from database
         # TODO: remove prints in this function
+        # TODO: une effort units instead of tasks
         # TODO: (optional) fix double data numTasks
-        # print("Using stand phase")
-        # print("round = " + str(game_model.round) + "\t" +
-        #      "pi = " + str(self.pi) + "\t" +
-        #      "rep = " + str(game_model.reputation))
+        print("Using stand phase")
         n = game_model.numAgents  #  count WAs
         m = game_model.numTasks  # count tasks to be done
         # calculate avg tasks per WA
         avg_tasks = [math.ceil(m/n)] * n
         # fetch tasks for current round
         tasks = Queue.Queue(m)
+        # TODO: This
         for i in range(m):
             tasks.put(random.randint(1,30))
         total_rep = sum(game_model.reputation)

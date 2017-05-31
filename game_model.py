@@ -81,9 +81,9 @@ class gameModel :
         pass
 
     def getEffortPerTask(self, task) :
-        # TODO : get the effort from the database
-        # print ("constant 1 effort")
-        return 1
+        query = "SELECT \"Effort Required\" FROM Tasks WHERE \"ID\"=%d" % task
+        value = self.dM.getValuesAsPandasObject(query)
+        return value.values[0][0]
 
     def executeGame(self, assignments) :
         """

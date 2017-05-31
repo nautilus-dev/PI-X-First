@@ -10,6 +10,7 @@ from data_import import dataManager
 
 class gameModel :
 
+    dM
     agents = np.array 
     reputation = np.array
     currentAsssignment = np.array
@@ -22,12 +23,10 @@ class gameModel :
     # calculate 
 
 
-    def getWorkerReputation (self, assignments) :
+    def getWorkerReputation (self) :
         """
-        Starts the whole game logic and gives back the reputation.
+        gives back the reputation.
         """
-        self.currentAssignment = assignments
-        # TODO: start whole logic!
         return self.reputation
 
 
@@ -39,7 +38,12 @@ class gameModel :
         self.repuation = np.zeros((numAgents), dtype = np.float)
         self.reputation = [0.5 for i in xrange(numAgents)]
         self.currentAssignment = np.zeros((numAgents), dtype = np.int)
-        self.round = 0
+        self.round = -1
+        self.dM = dataManager()
+    
+    def importData (self) :
+
+        
     
     def caclulcateReputation (self, successfulNessByWA, loadbyWA) :
         # for each WA: use the load (normalized by the amount of total tasks)
@@ -48,16 +52,9 @@ class gameModel :
         # and been able to work on all.
         print ("not implemented yet!")
        
-    def calculate
+    def executeGame(self, assignments) :
+    """
+    Does all the game playing based oon the assignments
+    """        
+        print ("not implemented yet!")
        
-    def calculateScore (self) :
-             
-        # assesss that all rounds are over
-            
-        
-    
-    # required:
-    # - Decisions from last round
-    # - successfulness from last round
-    
-    

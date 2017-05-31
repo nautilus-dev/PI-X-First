@@ -11,11 +11,13 @@ from data_import import dataManager
 class gameModel :
 
     dM = dataManager()
+    numAgents = 0
     agents = np.array
     reputation = np.array
     currentAsssignment = np.array
     round = -1
     numTasks = 20
+    
 
 
     # TODO :
@@ -35,6 +37,7 @@ class gameModel :
         print ("gameModel initialized")
         # make a 2D Array with the WorkerAgents in the columns and the rounds
         # as the rows , initialize all with zero.
+        self.numAgents = numAgents
         self.agents = np.zeros((numRounds, numAgents), dtype = np.float)
         self.repuation = np.zeros((numAgents), dtype = np.float)
         self.reputation = [0.5 for i in xrange(numAgents)]
@@ -44,7 +47,8 @@ class gameModel :
         # sample workers from tables
 
     def importData (self) :
-        self.dM.getValuesAsPandasObject("SELECT * FROM Tasks")
+        # self.dM.getValuesAsPandasObject("SELECT * FROM Tasks")
+    
         print ("not yet implemented")
 
 

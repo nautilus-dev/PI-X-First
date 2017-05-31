@@ -113,8 +113,8 @@ class gameModel :
             backlog = self.agentsBacklog[i]
             newTasks = assignments[i]
             waLeftCapacity = self.agentsProductivity[i]
-            for b in range(0, newTasks.qsize()) :
-                backlog.put(newTasks.get())
+            for b in range(0, len(newTasks)) :
+                backlog.put(newTasks[b])
             print ("working assignments parsed")
             print ("backlog size is: " , backlog.qsize())
             print ("agent productivity is: " , waLeftCapacity)

@@ -14,9 +14,6 @@ from data_import import dataManager
 
 class gameModel :
 
-    # Parameters for fitting Reputation
-    a = 0.017
-    y = 1
 
     dM = dataManager()
     numAgents = 0
@@ -79,18 +76,19 @@ class gameModel :
 
 
     def caclulcateReputation (self) :
-        # TODO:
         # for each worker calculate
-        # a * ((#successfulTasks - # failedTasks) * y +
-        #   (the last reputation * i) / i )
+        # ( (((((#succ - #failed)/(#succ + #failed))+1)/2)*(10-round)) + 
+        # (prevRep * round )) / 10
+    
         for wa in range(0, self.numAgents) :
             previousReputation = self.reputation[wa]
             successfulTasks = self.numSuccessfulEffort[wa]
             failedTasks = self.numFailedEffort[wa]
             numRounds = self.round
 
-            newRep = self.a * ((successfulTasks - failedTasks) * self.y +
-                (previousReputation * numRounds) / numRounds)
+            left = ((((successfulTasks - failedTasks) / (successfulTasks + failedTasks)) + 1) / 2 ) * (10 - numRounds)
+            right = (previousReputation * numRounds)
+            newRep = (left + right) / 10
 
             self.reputation[wa] = abs(newRep)
             print ("reputation for this guy is ", newRep)
@@ -108,6 +106,12 @@ class gameModel :
         value = self.dM.getValuesAsPandasObject(query)
         return value.values[0][0]
 
+    def getTaskDifficulty(self, task) :
+        return 1
+    
+    def getAgentCapability(self, agent) :
+        return 1
+    
     def executeGame(self, assignments) :
         """
         Does all the game playing based oon the assignments
@@ -154,7 +158,8 @@ class gameModel :
                 effort = self.getEffortPerTask(elem)
                 # print ("Current Element Effort", effort)
                 # print ("Left Capacity", waLeftCapacity)
-                if effort <= waLeftCapacity and Work:                    
+                Workable = True if self.getAgentCapability(i) >= self.getTaskDifficulty(elem) else False
+                if effort <= waLeftCapacity and Workable and Work:                    
                     self.numSuccessfulEffort[i] += effort
                     waLeftCapacity -= effort
                 else :

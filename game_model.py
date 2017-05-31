@@ -7,8 +7,6 @@ Created on Tue May 30 12:34:36 2017
 import numpy as np
 import Queue
 import random
-
-import math
 from data_import import dataManager
 
 
@@ -26,11 +24,6 @@ class gameModel :
     numSuccessfulEffort = np.array
     numFailedEffort = np.array
 
-
-
-    # TODO :
-    # Reputation calculation
-    # calculate probability whether task is succ. based on assignment
 
 
 
@@ -61,7 +54,7 @@ class gameModel :
         self.agentsBacklog = [0 for i in xrange(self.numAgents)]
         # constructing the backlog queue
         for i in range(0, self.numAgents) :
-            q = Queue.Queue()
+            q = []
             self.agentsBacklog[i] = q
 
     def getAgentsProductivity (self) :
@@ -72,7 +65,7 @@ class gameModel :
         productivity = self.dM.getValuesAsPandasObject(query)
         for wa in range(0, self.numAgents) :
             self.agentsProductivity[wa] = productivity.values[wa][0]
-                
+        # print("productivity of WA" , self.agentsProductivity)        
 
 
     def caclulcateReputation (self) :
@@ -91,14 +84,15 @@ class gameModel :
             newRep = (left + right) / 10
 
             self.reputation[wa] = abs(newRep)
-            print ("reputation for this guy is ", newRep)
+            # print ("reputation for this guy is ", newRep)
 
     def getTasks(self) :
-        """ returns open tasks for current round as queue """
-        # TODO: rewort that  sample from database
-        tasks = Queue.Queue()
-        for i in range(self.numTasks):
-            tasks.put(random.randint(1,30))
+        """ returns 20 tasks for current round as list """
+        tasks = []
+        query = "SELECT \"ID\" FROM Tasks ORDER BY RANDOM() LIMIT %d" % self.numTasks
+        taskDF = self.dM.getValuesAsPandasObject(query)
+        for task in range(0, self.numTasks) :
+            tasks.append(taskDF.values[task][0])
         return tasks
 
     def getEffortPerTask(self, task) :
@@ -121,16 +115,6 @@ class gameModel :
         """
         Does all the game playing based oon the assignments
         """
-        # TODO: calulculate whether the tasts are successfully finished
-
-        # we have all the assignments ans the effort units, just do scalar substraction?
-
-        # assignments is an list of lists of the tasks for each worker.
-
-        # TODO: ONLY FOR TESTING!!!!
-        # for i in range(0, self.numAgents) :
-        #    q = Queue.Queue()
-        #    assignments[i] = q
 
         # for each worker
             # load its backlog queue
@@ -148,17 +132,18 @@ class gameModel :
             waLeftCapacity = self.agentsProductivity[i]
             # print("Worker Capacity is: " , waLeftCapacity)            
             for b in range(0, len(newTasks)) :
-                backlog.put(newTasks[b])
+                backlog.append(newTasks[b])
             #print ("working assignments parsed")
             #print ("backlog size is: " , backlog.qsize())
             #print ("agent productivity is: " , waLeftCapacity)
             elem = -1
             # Never fall back into the working mode, when failing once
             Work = True
-            leftTasks = Queue.Queue()
+            leftTasks = []
             # print("backlog Size", backlog.qsize())
-            while backlog.qsize() > 0 :
-                elem = backlog.get()
+            while len(backlog) > 0 :
+                elem = backlog[0]
+                del backlog[0]
                 #print ("Current Element " , elem)
                 effort = self.getEffortPerTask(elem)
                 # print ("Current Element Effort", effort)
@@ -170,7 +155,7 @@ class gameModel :
                 else :
                     Work = False
                     self.numFailedEffort += self.getEffortPerTask(elem)
-                    leftTasks.put(elem)
+                    leftTasks.append(elem)
  
             # add back the tasks
             self.agentsBacklog[i] = leftTasks
@@ -180,6 +165,4 @@ class gameModel :
         
         self.caclulcateReputation()
        
-
-
 

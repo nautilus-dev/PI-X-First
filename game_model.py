@@ -12,12 +12,13 @@ class gameModel :
 
     dM = dataManager()
     numAgents = 0
-    agents = np.array
+    agentsProductivity = np.array
     reputation = np.array
     currentAsssignment = np.array
     round = -1
     numTasks = 20
-    
+    taskEffortUnits = np.array
+
 
 
     # TODO :
@@ -38,17 +39,19 @@ class gameModel :
         # make a 2D Array with the WorkerAgents in the columns and the rounds
         # as the rows , initialize all with zero.
         self.numAgents = numAgents
-        self.agents = np.zeros((numRounds, numAgents), dtype = np.float)
+        self.agentsProductivity = np.zeros((numAgents), dtype = np.int)
         self.repuation = np.zeros((numAgents), dtype = np.float)
         self.reputation = [0.5 for i in xrange(numAgents)]
         self.currentAssignment = np.zeros((numAgents), dtype = np.int)
+        self.taskEffortUnits = np.zeros((numTasks), dtype = np.int)
         self.round = -1
         self.numTasks = numTasks
-        # sample workers from tables
 
     def importData (self) :
         # self.dM.getValuesAsPandasObject("SELECT * FROM Tasks")
-    
+        self.taskEffortUnits = [1 for i in xrange(self.numTasks)]
+        # sample workers by their
+
         print ("not yet implemented")
 
 
@@ -65,5 +68,5 @@ class gameModel :
         """
         # TODO: All tasks are the same length: render from DB, take 1 as start
         # TODO: calulculate whether the tasts are successfully finished
-
+        self.round += 1
         print ("not implemented yet!")

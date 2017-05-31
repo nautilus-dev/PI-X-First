@@ -16,10 +16,8 @@ class dataManager :
         if self.checkDBisEmpty() :
             print("Database seems empty/not existing, doing the import")
             self.readInXLSX()
-        else : 
+        # else : 
             # print("Database is not empty, seems to be all there")
-            
-            
 
     def checkDBisEmpty(self) :
         tables = self.runCheck()

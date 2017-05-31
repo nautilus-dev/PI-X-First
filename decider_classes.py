@@ -6,6 +6,8 @@ Moritz Hoffmann <moritz.hoffmann@jupiter.uni-freiburg.de>
 
 import math
 import numpy
+import random
+import Queue
 
 from game_model import gameModel
 from data_import import dataManager
@@ -19,13 +21,11 @@ class piDecider :
         # assignment distribution of tasks as done by algorithm
         # for current round. Compare this variable to respective
         # WA backlog queue for quick measure of accuracy
-        self.assignments = []
 
     def decide(self, game_model) :
         """
         The switch: Use method according to current state
         """
-        self.assignments = [0] * game_model.numAgents
         if game_model.round < self.pi :
             self.search(game_model)
         else :
@@ -36,6 +36,7 @@ class piDecider :
         try to model peoples decisions in the search phase,
         e.g. distribute tasks equally or randomly
         """
+        # TODO: Make self.assignments a list of lists
         # TODO remove print statements in this function
         # TODO (optional) make distribution respect effort units instead of tasks
         print("Using search phase")
@@ -44,7 +45,7 @@ class piDecider :
         # assuming even distribution of tasks (not effort units)
         n = game_model.numAgents  # count workers (should be 10)
         m = game_model.numTasks
-        self.assignments = [math.ceil(m/n)] * n
+        self.assignments = [["job_id"] * int(math.ceil(m/n))] * n
         print("assignments = " + str(self.assignments))
 
     def stand(self, game_model) :
@@ -61,21 +62,30 @@ class piDecider :
         >>> game_model.reputation = [i/10. for i in range(1, 11)]
         >>> pd.decide(game_model)
         """
-        # TODO : remove prints in this function
-        print("Using stand phase")
-        print("round = " + str(game_model.round) + "\t" +
-              "pi = " + str(self.pi) + "\t" +
-              "rep = " + str(game_model.reputation))
+        # TODO: Task generation from database
+        # TODO: remove prints in this function
+        # TODO: (optional) fix double data numTasks
+        # print("Using stand phase")
+        # print("round = " + str(game_model.round) + "\t" +
+        #      "pi = " + str(self.pi) + "\t" +
+        #      "rep = " + str(game_model.reputation))
         n = game_model.numAgents  #  count WAs
         m = game_model.numTasks  # count tasks to be done
         # calculate avg tasks per WA
         avg_tasks = [math.ceil(m/n)] * n
-        open_tasks = m
+        # fetch tasks for current round
+        tasks = Queue.Queue(m)
+        for i in range(m):
+            tasks.put(random.randint(1,30))
         total_rep = sum(game_model.reputation)
         # iterate through workers and assign open tasks
         i = 0
-        for rep in game_model.reputation:
-            assign = int(rep/total_rep * m)
-            self.assignments[i] = ["job_id"] * assign
-            i += 1
+        self.assignments = [[]] * n
+        for i in range(n):
+            self.assignments[i] = []
+            rep = game_model.reputation[i]
+            assigns = int(rep/total_rep * m)
+            for j in range(assigns):
+                task = tasks.get()
+                self.assignments[i].append(task)
         print("assignments = " + str(self.assignments))

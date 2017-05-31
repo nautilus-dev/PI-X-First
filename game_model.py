@@ -6,12 +6,8 @@ Created on Tue May 30 12:34:36 2017
 
 import numpy as np
 import Queue
-<<<<<<< HEAD
 import random
-
-=======
 import math
->>>>>>> 176b6cb8218c80dee140ec052d235e1da5ccf467
 from data_import import dataManager
 
 
@@ -64,7 +60,7 @@ class gameModel :
         self.agentsBacklog = [0 for i in xrange(self.numAgents)]
         # constructing the backlog queue
         for i in range(0, self.numAgents) :
-            q = Queue.Queue()
+            q = []
             self.agentsBacklog[i] = q
 
     def getAgentsProductivity (self) :
@@ -146,17 +142,18 @@ class gameModel :
             waLeftCapacity = self.agentsProductivity[i]
             # print("Worker Capacity is: " , waLeftCapacity)            
             for b in range(0, len(newTasks)) :
-                backlog.put(newTasks[b])
+                backlog.append(newTasks[b])
             #print ("working assignments parsed")
             #print ("backlog size is: " , backlog.qsize())
             #print ("agent productivity is: " , waLeftCapacity)
             elem = -1
             # Never fall back into the working mode, when failing once
             Work = True
-            leftTasks = Queue.Queue()
+            leftTasks = []
             # print("backlog Size", backlog.qsize())
-            while backlog.qsize() > 0 :
-                elem = backlog.get()
+            while len(backlog) > 0 :
+                elem = backlog[0]
+                del backlog[0]
                 #print ("Current Element " , elem)
                 effort = self.getEffortPerTask(elem)
                 # print ("Current Element Effort", effort)
@@ -168,7 +165,7 @@ class gameModel :
                 else :
                     Work = False
                     self.numFailedEffort += self.getEffortPerTask(elem)
-                    leftTasks.put(elem)
+                    leftTasks.append(elem)
  
             # add back the tasks
             self.agentsBacklog[i] = leftTasks
@@ -178,6 +175,4 @@ class gameModel :
         
         self.caclulcateReputation()
        
-
-
 

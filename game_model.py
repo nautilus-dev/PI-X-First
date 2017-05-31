@@ -110,7 +110,7 @@ class gameModel :
                  FROM WorkerAgents WHERE \"ID\"=%d" % agent
         value = self.dM.getValuesAsPandasObject(query)
         return value.values[0][0]
- 
+
     def executeGame(self, assignments) :
         """
         Does all the game playing based oon the assignments

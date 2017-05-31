@@ -10,7 +10,7 @@ from data_import import dataManager
 
 class gameModel :
 
-    dM = DataManager()
+    dM = dataManager()
     agents = np.array
     reputation = np.array
     currentAsssignment = np.array

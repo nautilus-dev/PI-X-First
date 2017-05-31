@@ -10,8 +10,8 @@ from data_import import dataManager
 
 class gameModel :
 
-    dM
-    agents = np.array 
+    dM = DataManager()
+    agents = np.array
     reputation = np.array
     currentAsssignment = np.array
     round = -1
@@ -20,7 +20,7 @@ class gameModel :
     # TODO :
     # Reputation calculation
     # calculate probability whether task is succ. based on assignment
-    # calculate 
+
 
 
     def getWorkerReputation (self) :
@@ -39,23 +39,25 @@ class gameModel :
         self.reputation = [0.5 for i in xrange(numAgents)]
         self.currentAssignment = np.zeros((numAgents), dtype = np.int)
         self.round = -1
-        self.dM = dataManager()
-    
+        # sample workers from tables
+
     def importData (self) :
-        
+
         print ("not yet implemented")
-        
-    
+
+
     def caclulcateReputation (self, successfulNessByWA, loadbyWA) :
         # for each WA: use the load (normalized by the amount of total tasks)
         # and the whether it was successful with all tasks,
         # 1.0 reputation would be all tasks of a round got
         # and been able to work on all.
         print ("not implemented yet!")
-       
+
     def executeGame(self, assignments) :
         """
         Does all the game playing based oon the assignments
-        """        
+        """
+        # TODO: All tasks are the same
+        # TODO: calulculate whether the tasts are successfully finished
+
         print ("not implemented yet!")
-       

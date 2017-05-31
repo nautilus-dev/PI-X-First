@@ -92,9 +92,13 @@ class piDecider :
         while task_assigned is not True:
             # get best rated agent
             i = 0
-            agents = {}
+            tupel_list = []
             # create list of tupels with (old_pos, reputation)
             # TODO ~~ List ~~
+            for i in range(0, game_model.numAgents):
+                tupel_list.append((i, game_model.reputation[i]))
+            tupel_list.sort(key=lambda x: x[1])
+            print(tupel_list)
             # check if WA queue has room for current task
             #  - get effort required for task
             task_effort = game_model.getEffortPerTask(task)

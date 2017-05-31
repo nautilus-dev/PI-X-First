@@ -6,12 +6,9 @@ Created on Tue May 30 12:34:36 2017
 
 import numpy as np
 import Queue
-<<<<<<< HEAD
 import random
 
-=======
 import math
->>>>>>> 176b6cb8218c80dee140ec052d235e1da5ccf467
 from data_import import dataManager
 
 

@@ -70,7 +70,7 @@ class gameModel :
         productivity = self.dM.getValuesAsPandasObject(query)
         for wa in range(0, self.numAgents) :
             self.agentsProductivity[wa] = productivity.values[wa][0]
-                
+        # print("productivity of WA" , self.agentsProductivity)        
 
 
     def caclulcateReputation (self) :
@@ -89,7 +89,7 @@ class gameModel :
             newRep = (left + right) / 10
 
             self.reputation[wa] = abs(newRep)
-            print ("reputation for this guy is ", newRep)
+            # print ("reputation for this guy is ", newRep)
 
     def getTasks(self) :
         """ returns open tasks for current round as queue """

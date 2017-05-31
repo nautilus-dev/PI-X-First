@@ -98,14 +98,21 @@ class piDecider :
             agent_productivity = game_model.agentsProductivity[i]
             # 2.3 get WA queue
             agent_queue = [2, 11]
-            # agent_queue = game_model.agentsBacklog
-            # get free workpower
+            # agent_queue = game_model.agentsBacklog[i]
+            # 2.4 get free workpower
+            agent_workload = 0
             for queued_task in agent_queue:
                 agent_workload += game_model.getEffortPerTask(queued_task)
+            ########################################
             # debug
             print("effort = " + str(task_effort))
             print("produc = " + str(agent_productivity))
             print("bqueue = " + str(agent_queue))
+            ########################################
+            # check if enough workload is free
+            if agent_productivity >= agent_workload + task_effort:
+                pass
+                # assign
             task_assigned = True
         #   2.1 if true: assign task to worker
         #   2.2 else: proceed to 1 with next agent

@@ -17,7 +17,7 @@ class dataManager :
             print("Database seems empty/not existing, doing the import")
             self.readInXLSX()
         else : 
-            print("Database is not empty, seems to be all there")
+            # print("Database is not empty, seems to be all there")
             
             
 

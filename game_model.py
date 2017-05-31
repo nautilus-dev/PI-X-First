@@ -11,6 +11,10 @@ from data_import import dataManager
 
 class gameModel :
 
+    # Parameters for fitting Reputation
+    a = 1
+    y = 1
+
     dM = dataManager()
     numAgents = 0
     agentsProductivity = np.array
@@ -72,13 +76,21 @@ class gameModel :
         self.agentsProductivity = [(10 + i) for i in xrange(self.numAgents)]
 
 
-    def caclulcateReputation (self, successfulNessByWA, loadbyWA) :
+    def caclulcateReputation (self) :
         # TODO:
-        # for each WA: use the load (normalized by the amount of total tasks)
-        # and the whether it was successful with all tasks,
-        # 1.0 reputation would be all tasks of a round got
-        # and been able to work on all.
-        pass
+        # for each worker calculate
+        # a * ((#successfulTasks - # failedTasks) * y + 
+        #   (the last reputation * (i-1)) / i )
+        for wa in range(0, self.numAgents) :
+            previousReputation = self.reputation[wa]
+            successfulTasks = self.numSuccessfulEffort[wa]
+            failedTasks = self.numFailedEffort[wa]
+            numRounds = self.round
+            
+            newRep = self.a * ((successfulTasks - failedTasks) * self.y +
+                (previousReputation * (numRounds - 1)) / numRounds)
+
+            self.reputation[wa] = newRep
 
     def getEffortPerTask(self, task) :
         query = "SELECT \"Effort Required\" FROM Tasks WHERE \"ID\"=%d" % task
@@ -139,6 +151,7 @@ class gameModel :
                 leftTasks.put(elem)
             # add back the tasks
             self.agentsBacklog[i] = leftTasks
+        self.caclulcateReputation()
 
 
 

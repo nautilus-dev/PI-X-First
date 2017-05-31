@@ -6,6 +6,8 @@ Created on Tue May 30 12:34:36 2017
 
 import numpy as np
 import Queue
+import random
+
 from data_import import dataManager
 
 
@@ -84,6 +86,14 @@ class gameModel :
                 (previousReputation * (numRounds - 1)) / numRounds)
 
             self.reputation[wa] = newRep
+
+    def getTasks(self) :
+        """ returns open tasks for current round as queue """
+        # TODO: rewort that  sample from database
+        tasks = Queue.Queue()
+        for i in range(self.numTasks):
+            tasks.put(random.randint(1,30))
+        return tasks
 
     def getEffortPerTask(self, task) :
         query = "SELECT \"Effort Required\" FROM Tasks WHERE \"ID\"=%d" % task

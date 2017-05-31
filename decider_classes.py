@@ -12,6 +12,7 @@ from data_import import dataManager
 
 
 class Trial :
+    """ depreciated """
     def __init__(self, session_id) :
         self.dM = dataManager()
         self.nrounds = 5
@@ -31,8 +32,6 @@ class Trial :
                 WHERE \"Session ID\"=\"%s\" AND \"Round\"=\"%d\" ;"
                 %  (self.sid, self.day))
         self.workers = self.dM.getValuesAsPandasObject(query)
-        # TODO : remove this prin here
-        # print(self.workers)
 
     def new_day(self) :
         self.day += 1
@@ -50,29 +49,26 @@ class piDecider :
         # WA backlog queue for quick measure of accuracy
         self.assignments = []
 
-    def decide(self, trial) :
+    def decide(self, game_model) :
         """
         The switch: Use method according to current state
         """
-        if trial.day < self.pi :
-            self.search(trial)
+        if game_model.round < self.pi :
+            self.search(game_model)
         else :
-            self.stand(trial)
+            self.stand(game_model)
 
-    def search(self, trial) :
+    def search(self, game_model) :
         """
         try to model peoples decisions in the search phase,
         e.g. distribute tasks equally or randomly
         """
-        # something like this
-        # ...
-        #
         # assuming even distribution
-        n = len(trial.workers)  # count workers (should be 10)
-        m = len(trial.tasks)  # count tasks
+        n = game_model.numAgents  # count workers (should be 10)
+        m = game_model.numTasks
         self.assignments = [math.ceil(m/n)] * n
 
-    def stand(self, trial) :
+    def stand(self, game_model) :
         """
         try to model people's decisions in the stand phase, e.g.
           - distribute tasks among N top-rated workers or
@@ -80,20 +76,21 @@ class piDecider :
         # Example for generating dataset with algorithm using session id
         >>> sid = "e7e52776-2750-4cde-a5da-093ccb8feaf9"
         >>> pd = piDecider(0)
-        >>> trial = Trial(sid)
-        >>> pd.decide(trial)
+        >>> game_model = gameModel(10, 5)
+        gameModel initialized
+        >>> pd.decide(game_model)
 
         """
         # something like
         # p = fitted_distribution()
         # self.assignments = p
 
-        n = len(trial.workers)  #  count WAs
-        m = len(trial.tasks)  # count tasks to be done
+        n = len(game_model.workers)  #  count WAs
+        m = len(game_model.tasks)  # count tasks to be done
         # calculate avg tasks per WA
         avg_tasks = [math.ceil(m/n)] * n
         i = 0
-        for wa in trial.workers * m:
+        for wa in game_model.workers * m:
             if open_tasks > 0:
                 self.assignments[i] = wa
             i += 1

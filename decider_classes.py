@@ -63,6 +63,8 @@ class piDecider :
         try to model peoples decisions in the search phase,
         e.g. distribute tasks equally or randomly
         """
+        # TODO remove print statements in this function
+        print("Using search phase")
         # assuming even distribution
         n = game_model.numAgents  # count workers (should be 10)
         m = game_model.numTasks
@@ -78,15 +80,18 @@ class piDecider :
         >>> pd = piDecider(0)
         >>> game_model = gameModel(10, 5)
         gameModel initialized
+        >>> game_model.executeGame()
         >>> pd.decide(game_model)
 
         """
         # something like
         # p = fitted_distribution()
         # self.assignments = p
+        # TODO : remove prints in this function
+        print("Using stand phase")
 
-        n = len(game_model.workers)  #  count WAs
-        m = len(game_model.tasks)  # count tasks to be done
+        n = game_model.numAgents  #  count WAs
+        m = game_model.numTasks  # count tasks to be done
         # calculate avg tasks per WA
         avg_tasks = [math.ceil(m/n)] * n
         i = 0

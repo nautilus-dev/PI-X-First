@@ -37,6 +37,7 @@ class piDecider :
         e.g. distribute tasks equally or randomly
         """
         # TODO remove print statements in this function
+        # TODO (optional) make distribution respect effort units instead of tasks
         print("Using search phase")
         print("round = " + str(game_model.round) + "\t" +
               "pi = " + str(self.pi))
@@ -45,27 +46,21 @@ class piDecider :
         m = game_model.numTasks
         self.assignments = [math.ceil(m/n)] * n
         print("assignments = " + str(self.assignments))
+        return self.assignments
 
     def stand(self, game_model) :
         """
         try to model people's decisions in the stand phase, e.g.
           - distribute tasks among N top-rated workers or
           - fill top-rated ẀAs workload, then go to 2nd rated etc.
-        >>> pd = piDecider(1)
+        >>> pd = piDecider(0)
         >>> game_model = gameModel(10, 5)
         gameModel initialized
         >>> a = []
         >>> game_model.executeGame(a)
-        not implemented yet!
-        >>> pd.decide(game_model)
-        >>> game_model.executeGame(a)
-        not implemented yet!
         >>> pd.decide(game_model)
 
         """
-        # something like
-        # p = fitted_distribution()
-        # self.assignments = p
         # TODO : remove prints in this function
         print("Using stand phase")
         print("round = " + str(game_model.round) + "\t" +
@@ -75,13 +70,15 @@ class piDecider :
         m = game_model.numTasks  # count tasks to be done
         # calculate avg tasks per WA
         avg_tasks = [math.ceil(m/n)] * n
-        i = 0
         open_tasks = m
-        for rep in game_model.reputation * m:
-            if open_tasks > 0:
-                # add task
-                pass
+        game_model.reputation = [i/10. for i in range(1, 11)]
+        print(game_model.reputation)
+        total_rep = sum(game_model.reputation)
+        # iterate through workers and assign open tasks
+        i = 0
+        for rep in game_model.reputation:
+            assign = int(rep/total_rep * m)
+            self.assignments[i] = ["job_id"] * assign
             i += 1
-            # print("i = " + str(i))
-            # print("rep = " + str(rep))
         print("assignments = " + str(self.assignments))
+        return self.assignments

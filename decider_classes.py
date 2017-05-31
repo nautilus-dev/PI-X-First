@@ -65,6 +65,7 @@ class piDecider :
         """
         # TODO remove print statements in this function
         print("Using search phase")
+        print(game_model.round)
         # assuming even distribution
         n = game_model.numAgents  # count workers (should be 10)
         m = game_model.numTasks
@@ -80,7 +81,11 @@ class piDecider :
         >>> pd = piDecider(0)
         >>> game_model = gameModel(10, 5)
         gameModel initialized
-        >>> game_model.executeGame()
+        >>> a = []
+        >>> game_model.executeGame(a)
+        >>> print(game_model.round)
+        >>> game_model.executeGame(a)
+        >>> print(game_model.round)
         >>> pd.decide(game_model)
 
         """

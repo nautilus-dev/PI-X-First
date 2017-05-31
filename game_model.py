@@ -15,6 +15,7 @@ class gameModel :
     reputation = np.array
     currentAsssignment = np.array
     round = -1
+    numTasks = 20
 
 
     # TODO :
@@ -30,7 +31,7 @@ class gameModel :
         return self.reputation
 
 
-    def __init__ (self, numAgents, numRounds) :
+    def __init__ (self, numAgents, numRounds, numTasks = 20) :
         print ("gameModel initialized")
         # make a 2D Array with the WorkerAgents in the columns and the rounds
         # as the rows , initialize all with zero.
@@ -39,10 +40,11 @@ class gameModel :
         self.reputation = [0.5 for i in xrange(numAgents)]
         self.currentAssignment = np.zeros((numAgents), dtype = np.int)
         self.round = -1
+        self.numTasks = numTasks
         # sample workers from tables
 
     def importData (self) :
-
+        self.dM.getValuesAsPandasObject("SELECT * FROM Tasks")
         print ("not yet implemented")
 
 
@@ -57,7 +59,7 @@ class gameModel :
         """
         Does all the game playing based oon the assignments
         """
-        # TODO: All tasks are the same
+        # TODO: All tasks are the same length: render from DB, take 1 as start
         # TODO: calulculate whether the tasts are successfully finished
 
         print ("not implemented yet!")

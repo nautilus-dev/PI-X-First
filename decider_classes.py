@@ -96,7 +96,6 @@ class piDecider :
         # iterate over agents and assign task to best one that has free capacity
         while task_assigned is not True and i < game_model.numAgents:
             # get current agent id
-            print("iteration", i)
             agent_id = tupel_list[i][0]
             # check if WA queue has room for current task
             #  - get effort required for task

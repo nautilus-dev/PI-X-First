@@ -50,6 +50,7 @@ class gameModel :
         self.taskEffortUnits = np.zeros((numTasks), dtype = np.int)
         self.round = 0
         self.numTasks = numTasks
+        self.numRounds= numRounds
         self.getAgentsProductivity()
         self.agentsBacklog = [0 for i in xrange(self.numAgents)]
         # constructing the backlog queue
@@ -70,22 +71,23 @@ class gameModel :
 
     def caclulcateReputation (self) :
         # for each worker calculate
-        # ( (((((#succ - #failed)/(#succ + #failed))+1)/2)*(10-round)) +
-        # (prevRep * round )) / 10
+        # ( (((((#succ - #failed)/(#succ + #failed))+1)/2)*(num_rounds-current_round)) +
+        # (prevRep * round )) / num_rounds
 
         for wa in range(0, self.numAgents) :
             previousReputation = self.reputation[wa]
             successfulTasks = self.numSuccessfulEffort[wa]
             failedTasks = self.numFailedEffort[wa]
-            numRounds = self.round
+            numRounds = self.numRounds
+            current_round = self.round
 
-            left = ((((successfulTasks - failedTasks) / (successfulTasks + failedTasks)) + 1) / 2 ) * (10 - numRounds)
-            right = (previousReputation * numRounds)
-            newRep = (left + right) / 10
+            left = ((((successfulTasks - failedTasks) / (successfulTasks + failedTasks)) + 1) / 2 ) * (self.numRounds - current_round)
+            right = (previousReputation * current_round)
+            newRep = (left + right) / self.numRounds
 
             self.reputation[wa] = abs(newRep)
             # print ("reputation for this guy is ", newRep)
-            # TODO remove this
+            # TODO fix above and remove this
             self.reputation[wa] = abs(random.random())
 
 

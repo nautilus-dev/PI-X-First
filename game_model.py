@@ -85,11 +85,11 @@ class gameModel :
             right = (previousReputation * current_round)
             newRep = (left + right) / self.numRounds
 
-            # self.reputation[wa] = abs(newRep)
+            self.reputation[wa] = abs(newRep)
             # print ("reputation for this guy is ", newRep)
             # TODO fix above and remove this
             # self.reputation[wa] = abs(random.random())
-        self.calculate_reputation()
+        # self.calculate_reputation()
 
     def calculate_reputation(self):
         for wa in range(self.numAgents):
@@ -99,11 +99,11 @@ class gameModel :
             total_rounds = self.numRounds
             n_round = self.round
 
-            print(rep_prev)
-            print('n_succ', n_succ, 'n_fail', n_fail)
+            # print(rep_prev)
+            # print('n_succ', n_succ, 'n_fail', n_fail)
 
             new_reputation = (n_succ - n_fail) / (n_succ + n_fail)
-            new_reputation = (new_reputation + 1) / 2  # normalize
+            new_reputation = (new_reputation + 1.) / 2.  # normalize
             self.reputation[wa] = new_reputation
 
 
@@ -133,6 +133,12 @@ class gameModel :
         value = self.dM.getValuesAsPandasObject(query)
         # print("Worker",agent, "capbility", value.values)
         return value.values[0][0]
+
+    def isWorkable(self, task, agent_id):
+        if self.getAgentCapability(agent_id) >= self.getTaskDifficulty(task):
+            return True
+        return False
+
 
     def executeGame(self, assignments) :
         """
@@ -170,13 +176,13 @@ class gameModel :
                 effort = self.getEffortPerTask(elem)
                 # print ("Current Element Effort", effort)
                 # print ("Left Capacity", waLeftCapacity)
-                Workable = True if self.getAgentCapability(i + 1) >= self.getTaskDifficulty(elem) else False
+                Workable = self.isWorkable(elem, i + 1)
                 # print (Workable)
                 if effort <= waLeftCapacity and Workable :
                     self.numSuccessfulEffort[i] += effort
                     waLeftCapacity -= effort
                 else :
-                    self.numFailedEffort += self.getEffortPerTask(elem)
+                    self.numFailedEffort[i] += self.getEffortPerTask(elem)
                     leftTasks.append(elem)
 
             # add back the tasks

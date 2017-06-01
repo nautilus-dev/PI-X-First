@@ -19,8 +19,6 @@ class piDecider :
         self.pi = pi
         self.verbose = verbose
 
-        # TODO: Make assignment data useable for evaluation of model
-
     def decide(self, game_model) :
         """
         The switch: Use method according to current state

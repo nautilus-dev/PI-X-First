@@ -85,10 +85,26 @@ class gameModel :
             right = (previousReputation * current_round)
             newRep = (left + right) / self.numRounds
 
-            self.reputation[wa] = abs(newRep)
+            # self.reputation[wa] = abs(newRep)
             # print ("reputation for this guy is ", newRep)
             # TODO fix above and remove this
-            self.reputation[wa] = abs(random.random())
+            # self.reputation[wa] = abs(random.random())
+        self.calculate_reputation()
+
+    def calculate_reputation(self):
+        for wa in range(self.numAgents):
+            rep_prev = self.reputation[wa]
+            n_succ = self.numSuccessfulEffort[wa]
+            n_fail = self.numFailedEffort[wa]
+            total_rounds = self.numRounds
+            n_round = self.round
+
+            print(rep_prev)
+            print('n_succ', n_succ, 'n_fail', n_fail)
+
+            new_reputation = (n_succ - n_fail) / (n_succ + n_fail)
+            new_reputation = (new_reputation + 1) / 2  # normalize
+            self.reputation[wa] = new_reputation
 
 
     def getTasks(self) :

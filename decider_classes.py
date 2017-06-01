@@ -14,22 +14,31 @@ from data_import import dataManager
 
 
 class piDecider :
-    def __init__(self, pi=1) :
+    def __init__(self, pi=1, verbose=False) :
         # switch parameter. defaults to 1
         self.pi = pi
+        self.verbose = verbose
 
-        # assignment distribution of tasks as done by algorithm
-        # for current round. Compare this variable to respective
-        # WA backlog queue for quick measure of accuracy
+        # TODO: Make assignment data useable for evaluation of model
 
     def decide(self, game_model) :
         """
         The switch: Use method according to current state
         """
-        self.assignments = [[]] * game_model.numAgents
+        self.assignments = [[] for _ in range(game_model.numAgents)]
         if game_model.round < self.pi :
+            if self.verbose:
+                print("=" * 70)
+                print("Using search phase")
+                print("round = " + str(game_model.round) + "\t" +
+                      "pi = " + str(self.pi))
             self.search(game_model)
         else :
+            if self.verbose:
+                print("=" * 70)
+                print("Using stand phase")
+                print("round = " + str(game_model.round) + "\t" +
+                      "pi = " + str(self.pi))
             self.stand(game_model)
 
     def search(self, game_model) :
@@ -37,22 +46,17 @@ class piDecider :
         try to model peoples decisions in the search phase,
         e.g. distribute tasks equally or randomly
         """
-        # TODO remove print statements in this function
         # TODO (optional) make distribution respect effort units instead of tasks
-        print("Using search phase")
-        print("round = " + str(game_model.round) + "\t" +
-              "pi = " + str(self.pi))
+        #
         # assuming even distribution of tasks (not effort units)
         n = game_model.numAgents  # count workers (should be 10)
         m = game_model.numTasks
         avg_tasks = int(math.ceil(m/n))
         tasks = game_model.getTasks()
         for wa in range(n):
-            self.assignments[wa] = []
             for i in range(avg_tasks):
             #for i in range(tasks)):
                 self.assignments[wa].append(tasks.pop())
-        print("assignments = " + str(self.assignments))
 
     def stand(self, game_model) :
         """
@@ -62,67 +66,70 @@ class piDecider :
         """
         # TODO: remove prints in this function
         # TODO: (optional) fix double data numTasks
-        print("Using stand phase")
-        # TODO: This:
+        #
         tasks = game_model.getTasks()
+        tupel_list = []
+        # create list of agents as tupels with (agent_id, reputation)
+        for i in range(1, game_model.numAgents + 1):
+            tupel_list.append((i, game_model.getWorkerReputation()[i - 1]))
+        # sort list by reputation
+        tupel_list.sort(key=lambda x: x[1], reverse=True)
+        # print("sorted tupel list", tupel_list)
+        i = 1
         while len(tasks) > 0:
             # iterate through tasks and assign them
             current_task = tasks.pop()
-            self.assignTask(current_task, game_model)
-        # n = game_model.numAgents  #  count WAs
-        # m = game_model.numTasks  # count tasks to be done
-        # calculate avg tasks per WA
-        # avg_tasks = [math.ceil(m/n)] * n
-        # total_rep = sum(game_model.reputation)
-        # fetch tasks from game model
-        # tasks = game_model.getTasks()
-        # iterate through workers and assign open tasks
-        # for i in range(n):
-        #    self.assignments[i] = []
-        #    rep = game_model.reputation[i]
-        #    assigns = int(rep/total_rep * m)
-        #    for j in range(assigns):
-        #        task = tasks.get()
-        #        self.assignments[i].append(task)
-        # print("assignments = " + str(self.assignments))
+            # print("Assigning task no. " + str(i) + "\tTask ID: " + str(current_task) + "\t" +
+            #       "Req. effort: " + str(game_model.getEffortPerTask(current_task)))
+            self.assignTask(current_task, tupel_list, game_model)
+            i += 1
+        # print("Assignments: " + str(self.assignments))
 
-    def assignTask(self, task, game_model):
+    def assignTask(self, task, tupel_list, game_model):
         """ more sophisticated task assigner for stand phase """
+        # TODO: Check reputation calculation
+        # TODO: Remove print statements in this function
+        #
         task_assigned = False
-        while task_assigned is not True:
-            # get best rated agent
-            i = 0
-            tupel_list = []
-            # create list of tupels with (old_pos, reputation)
-            # TODO ~~ List ~~
-            for i in range(0, game_model.numAgents):
-                tupel_list.append((i, game_model.reputation[i]))
-            tupel_list.sort(key=lambda x: x[1])
-            print(tupel_list)
+        # prepare agent list
+        i = 0
+        # iterate over agents and assign task to best one that has free capacity
+        while task_assigned is not True and i <= game_model.numAgents:
+            # get current agent id
+            agent_id = tupel_list[i][0]
             # check if WA queue has room for current task
             #  - get effort required for task
             task_effort = game_model.getEffortPerTask(task)
             #  - get WA productivity
-            agent_productivity = game_model.agentsProductivity[i]
+            # TODO: fix that this methods still requires the technical id
+            #       which is 1 less than the agent_id
+            agent_productivity = game_model.agentsProductivity[agent_id - 1]
             #  - get WA queue
-            agent_queue = game_model.agentsBacklog[i]
+            agent_queue = game_model.agentsBacklog[agent_id - 1]
             #  - get free workpower
             agent_workload = 0
             for queued_task in agent_queue:
                 agent_workload += game_model.getEffortPerTask(queued_task)
+            #  - include current assignments in wload calculation
+            for current_queued_task in self.assignments[agent_id - 1]:
+                agent_workload += game_model.getEffortPerTask(current_queued_task)
             ########################################
             # debug
-            print("iagent = " + str(i))
-            print("effort = " + str(task_effort))
-            print("produc = " + str(agent_productivity))
-            print("bqueue = " + str(agent_queue))
-            print("workld = " + str(agent_workload))
+            # print("agent_id   = " + str(agent_id) + "/" + str(game_model.numAgents))
+            # print("reputation = " + str(tupel_list[i][1]))
+            # print("prodctivty = " + str(agent_productivity))
+            # print("bqueue     = " + str(agent_queue))
+            # print("currenttsk = " + str(self.assignments[agent_id - 1]))
+            # print("workload   = " + str(agent_workload))
+            # /debug
             ########################################
             #  - check if enough workload is free
             if agent_productivity >= agent_workload + task_effort:
             #  - if free workload: assign task to worker
-                # self.assignments[i].append(task)
-                pass
-            task_assigned = True
-            # TODO: proceed to next agent
-            print("-"*80)
+                # print("Assigning Task " + str(task) + " to agent " + str(agent_id))
+                self.assignments[agent_id - 1].append(task)
+                task_assigned = True
+            i += 1
+            # print("-"*80)
+        if task_assigned is not True:
+            print("Assignment of task " + str(task) + " failed")

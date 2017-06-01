@@ -85,6 +85,9 @@ class gameModel :
 
             self.reputation[wa] = abs(newRep)
             # print ("reputation for this guy is ", newRep)
+            # TODO remove this
+            self.reputation[wa] = abs(random.random())
+
 
     def getTasks(self) :
         """ returns 20 tasks for current round as list """

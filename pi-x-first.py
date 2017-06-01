@@ -33,8 +33,18 @@ def main() :
 
     # run
     for r in range(0, nrounds):
-        game_model.getWorkerReputation()
+        # play the agile manager game in day r
+
+        # current visible worker reputation can now be accessed using
+        # reputation = game_model.getWorkerReputation()
+
+        # Run the decider on current task/reputation set
         pd.decide(game_model)
+
+        # assignments can now be accessed using
+        # assigns = pd.assignments
+
+        # advance one day using previously generated assignments
         game_model.executeGame(pd.assignments)
 
 

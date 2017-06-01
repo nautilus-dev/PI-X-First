@@ -28,7 +28,7 @@ def main() :
     nrounds = 5
 
     # init everything
-    pd = piDecider(pi, verbose=True)
+    pd = piDecider(pi)
     game_model = gameModel(nagents, nrounds)
 
     # run

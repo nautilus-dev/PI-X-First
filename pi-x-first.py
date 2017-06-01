@@ -35,7 +35,7 @@ def main() :
     for r in range(0, nrounds):
         # play the agile manager game in day r
         print("=" * 70)
-        print("Playing round " + str(r))
+        print("Playing round " + str(r + 1))
 
         # current visible worker reputation can now be accessed using
         reputation = game_model.getWorkerReputation()
@@ -46,8 +46,9 @@ def main() :
         # assignments can now be accessed using
         assigns = pd.assignments
 
+        # print dada for current round
         for i in range(nagents):
-            print("-" * 20)
+            print("-" * 70)
             print("Agent:\t" + str(i + 1))
             print("Reputation:\t" + str(reputation[i]))
             print("Job Queue:\t" + str(assigns[i]))

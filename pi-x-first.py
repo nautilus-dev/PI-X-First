@@ -28,7 +28,7 @@ def main() :
     nrounds = 5
 
     # init everything
-    pd = piDecider(pi)
+    pd = piDecider(pi, verbose=True)
     game_model = gameModel(nagents, nrounds)
 
     # run
@@ -51,7 +51,7 @@ def main() :
             print("-" * 70)
             print("Agent:\t" + str(i + 1))
             print("Reputation:\t" + str(reputation[i]))
-            print("Job Queue:\t" + str(assigns[i]))
+            print("New Assigned:\t" + str(assigns[i]))
 
         # advance one day using previously generated assignments
         game_model.executeGame(pd.assignments)

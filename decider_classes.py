@@ -79,15 +79,15 @@ class piDecider :
         while len(tasks) > 0:
             # iterate through tasks and assign them
             current_task = tasks.pop()
-            # print("Assigning task no. " + str(i) + "\tTask ID: " + str(current_task) + "\t" +
-            #       "Req. effort: " + str(game_model.getEffortPerTask(current_task)))
+            if self.verbose:
+                print("Task no. " + str(i) + "\tTask ID: " + str(current_task) + "\t" +
+                      "Req. effort: " + str(game_model.getEffortPerTask(current_task)))
             self.assignTask(current_task, tupel_list, game_model)
             i += 1
         # print("Assignments: " + str(self.assignments))
 
     def assignTask(self, task, tupel_list, game_model):
         """ more sophisticated task assigner for stand phase """
-        # TODO: Check reputation calculation
         # TODO: Remove print statements in this function
         #
         task_assigned = False
@@ -121,15 +121,17 @@ class piDecider :
             # print("bqueue     = " + str(agent_queue))
             # print("currenttsk = " + str(self.assignments[agent_id - 1]))
             # print("workload   = " + str(agent_workload))
+            # print("-" * 25)
             # /debug
             ########################################
             #  - check if enough workload is free
             if agent_productivity >= agent_workload + task_effort:
             #  - if free workload: assign task to worker
-                # print("Assigning Task " + str(task) + " to agent " + str(agent_id))
+                if self.verbose:
+                    print("Assigning Task " + str(task) + " to agent " + str(agent_id))
                 self.assignments[agent_id - 1].append(task)
                 task_assigned = True
             i += 1
             # print("-"*80)
-        if task_assigned is not True:
+        if task_assigned is not True and self.verbose:
             print("Assignment of task " + str(task) + " failed")

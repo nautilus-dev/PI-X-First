@@ -41,7 +41,7 @@ def main() :
 
     # init everything
     pd = piDecider(pi)
-    game_model = gameModel(nagents, nrounds, alternativeReputation)
+    game_model = gameModel(nagents, nrounds, 20 ,alternativeReputation)
 
     # run
     for r in range(0, nrounds):

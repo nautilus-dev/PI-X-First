@@ -16,8 +16,13 @@ The data can be downloaded from here: https://www.synapse.org/#!Synapse:syn59095
 - sqlite 3
 - pandas
 - git
-- The data fromt the experiement has to be copied to the subfolder /source_datafiles
+- The data from the experiement has to be copied to the subfolder /source_datafiles
 
 ## Executing Reuirements
 
-- The data fromt the experiement has to be copied to the subfolder /source_datafiles
+- The data from the experiement has to be copied to the subfolder /source_datafiles
+
+## Execution
+Please invoke this command with "python2 pi-x-first.py <pi> <nAgents> <numRounds> <alternativeReputation>"
+
+"<alternativeReputation>" is an optional parameter

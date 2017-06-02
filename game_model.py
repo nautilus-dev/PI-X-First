@@ -95,9 +95,9 @@ class gameModel :
             # get previous reputation
             prev_reputation = self.reputation[wa]
             # read "real" reputation from database (using agent_id = wa + 1)
-            real_reputation = getAgentCapability(wa + 1)
+            real_reputation = self.getAgentCapability(wa + 1)
             # obstruction level. i.e. how close to "real" reputation are we
-            obstruction = self.numSuccessfulEffort[wa] + numFailedEffort[wa]
+            obstruction = self.numSuccessfulEffort[wa] + self.numFailedEffort[wa]
             new_reputation = (real_reputation * obstruction + prev_reputation) / 2.
 
             self.reputation[wa] = new_reputation

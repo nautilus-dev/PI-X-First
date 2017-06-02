@@ -23,6 +23,6 @@ The data can be downloaded from here: https://www.synapse.org/#!Synapse:syn59095
 - The data from the experiement has to be copied to the subfolder /source_datafiles
 
 ## Execution
-Please invoke this command with "python2 pi-x-first.py <pi> <nAgents> <numRounds> <alternativeReputation>"
+Please invoke this command with "python2 pi-x-first.py \<pi\> \<nAgents\> \<numRounds\> \<alternativeReputation\>"
 
-"<alternativeReputation>" is an optional parameter
+"\<alternativeReputation\>" is an optional parameter

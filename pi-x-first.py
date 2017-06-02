@@ -10,7 +10,7 @@ from game_model import gameModel
 import sys
 
 def main() :
-    usage = "Please invoke this command with python2 pi-x-first.py <pi> <nAgents> <numRounds>"
+    usage = "Please invoke this command with python2 pi-x-first.py <pi> <nAgents> <numRounds> <alternativeReputation>"
 
     if (len(sys.argv) < 4) :
         print(usage)
@@ -19,8 +19,9 @@ def main() :
         pi = int(sys.argv[1])
         nagents = int(sys.argv[2])
         nrounds = int(sys.argv[3])
-        
-    print("Running pi-x-first with the parameter", pi, nagents, nrounds)
+        alternativeReputation = bool(sys.argv[4]) if (len(sys.argv) == 5) else False
+
+    print("Running pi-x-first with the parameter", pi, nagents, nrounds, alternativeReputation)
     # main goes here
     # dM = dataManager()
 
@@ -40,7 +41,7 @@ def main() :
 
     # init everything
     pd = piDecider(pi)
-    game_model = gameModel(nagents, nrounds)
+    game_model = gameModel(nagents, nrounds, alternativeReputation)
 
     # run
     for r in range(0, nrounds):

@@ -92,18 +92,15 @@ class gameModel :
         # self.calculate_reputation()
 
     def calculate_reputation(self):
-        for wa in range(self.numAgents):
-            rep_prev = self.reputation[wa]
-            n_succ = self.numSuccessfulEffort[wa]
-            n_fail = self.numFailedEffort[wa]
-            total_rounds = self.numRounds
-            n_round = self.round
+        for wa in range(0, self.numAgents):
+            # get previous reputation
+            prev_reputation = self.reputation[wa]
+            # read "real" reputation from database (using agent_id = wa + 1)
+            real_reputation = getAgentCapability(wa + 1)
+            # obstruction level. i.e. how close to "real" reputation are we
+            obstruction = self.numSuccessfulEffort[wa] + numFailedEffort[wa]
+            new_reputation = (real_reputation * obstruction + prev_reputation) / 2.
 
-            # print(rep_prev)
-            # print('n_succ', n_succ, 'n_fail', n_fail)
-
-            new_reputation = (n_succ - n_fail) / (n_succ + n_fail)
-            new_reputation = (new_reputation + 1.) / 2.  # normalize
             self.reputation[wa] = new_reputation
 
 

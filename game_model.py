@@ -23,7 +23,7 @@ class gameModel :
     numTasks = 20
     numSuccessfulEffort = np.array
     numFailedEffort = np.array
-    rep_model = 0
+    rep_model = False
 
 
     def getWorkerReputation (self) :
@@ -33,7 +33,7 @@ class gameModel :
         return self.reputation
 
 
-    def __init__ (self, numAgents, numRounds, numTasks = 20, rep_model = 0) :
+    def __init__ (self, numAgents, numRounds, numTasks = 20, rep_model = False) :
         """
         Makes a Game Model and initializes it
         """
@@ -50,6 +50,7 @@ class gameModel :
         self.round = 0
         self.numTasks = numTasks
         self.numRounds= numRounds
+        self.rep_model = rep_model
         self.getAgentsProductivity()
         self.agentsBacklog = [0 for i in xrange(self.numAgents)]
         # constructing the backlog queue
@@ -89,6 +90,7 @@ class gameModel :
             # TODO fix above and remove this
             # self.reputation[wa] = abs(random.random())
         # self.calculate_reputation()
+
 
     def calculate_reputation(self):
         for wa in range(0, self.numAgents):
@@ -190,5 +192,3 @@ class gameModel :
             self.caclulcateReputation()
         else:
             self.calculate_reputation()
-
-

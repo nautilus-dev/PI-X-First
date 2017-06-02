@@ -23,8 +23,7 @@ class gameModel :
     numTasks = 20
     numSuccessfulEffort = np.array
     numFailedEffort = np.array
-
-
+    rep_model = False
 
 
     def getWorkerReputation (self) :
@@ -34,7 +33,7 @@ class gameModel :
         return self.reputation
 
 
-    def __init__ (self, numAgents, numRounds, numTasks = 20) :
+    def __init__ (self, numAgents, numRounds, numTasks = 20, rep_model = False) :
         """
         Makes a Game Model and initializes it
         """
@@ -187,7 +186,9 @@ class gameModel :
             # print("New BacklogQueue length is: " , self.agentsBacklog[i].qsize())
             # print("Successfull Effort" , self.numSuccessfulEffort[i])
             # print("Queued Effort", self.numFailedEffort[i])
-
-        self.caclulcateReputation()
+        if self.rep_model:
+            self.caclulcateReputation()
+        else:
+            self.calculate_reputation()
 
 

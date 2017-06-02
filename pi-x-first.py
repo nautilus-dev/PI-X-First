@@ -7,9 +7,20 @@ Created on Wed May 24 10:32:48 2017
 from data_import import dataManager
 from decider_classes import piDecider
 from game_model import gameModel
-
+import sys
 
 def main() :
+    usage = "Please invoke this command with python2 pi-x-first.py <pi> <nAgents> <numRounds>"
+
+    if (len(sys.argv) < 4) :
+        print(usage)
+        return(1)
+    else:
+        pi = int(sys.argv[1])
+        nagents = int(sys.argv[2])
+        nrounds = int(sys.argv[3])
+        
+    print("Running pi-x-first with the parameter", pi, nagents, nrounds)
     # main goes here
     # dM = dataManager()
 
@@ -21,11 +32,11 @@ def main() :
     # and the Workers level
 
     # set the switch parameter
-    pi = 1
+    #pi = 1
     # set how many agents
-    nagents = 10
+    #nagents = 10
     # set how many rounds
-    nrounds = 5
+    #nrounds = 5
 
     # init everything
     pd = piDecider(pi)

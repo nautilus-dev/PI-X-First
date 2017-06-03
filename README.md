@@ -25,7 +25,7 @@ The data can be downloaded from here: https://www.synapse.org/#!Synapse:syn59095
   Spaces in file names have to be replaced by underscores.
 
 ## Execution
-Please invoke the model with "python2 pi-x-first.py <pi> <nAgents> <numRounds> <alternativeReputation>"
+Please invoke the model with `python2 pi-x-first.py <pi> <nAgents> <numRounds> <alternativeReputation>`
 
 For the data present, it is recommended to use `nAgents=10`.
 

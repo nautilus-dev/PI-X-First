@@ -19,10 +19,14 @@ The data can be downloaded from here: https://www.synapse.org/#!Synapse:syn59095
 
 ## Executing Reuirements
 
+- python 2.7
 - pandas
 - The data from the experiement has to be copied to the subfolder /source_datafiles
+  Spaces in file names have to be replaced by underscores.
 
 ## Execution
-Please invoke this command with "python2 pi-x-first.py <pi> <nAgents> <numRounds> <alternativeReputation>"
+Please invoke the model with "python2 pi-x-first.py <pi> <nAgents> <numRounds> <alternativeReputation>"
 
-"<alternativeReputation>" is an optional boolean parameter. If set to True, an alternative reputation model is used.
+For the data present, it is recommended to use `nAgents=10`.
+
+`<alternativeReputation>` is an optional boolean parameter that defaults to False. If set to True, an alternative reputation model is used.

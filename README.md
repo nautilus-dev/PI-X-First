@@ -16,8 +16,9 @@ The data can be downloaded from here: https://www.synapse.org/#!Synapse:syn59095
 - pandas
 - git
 - The data from the experiement has to be copied to the subfolder /source_datafiles
+  Spaces in file names have to be replaced by underscores.
 
-## Executing Reuirements
+## Executing Requirements
 
 - python 2.7
 - pandas
